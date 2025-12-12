@@ -91,7 +91,7 @@ The model's scalability lies in its modular architecture — allowing new module
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under Sahil.
 
 ## 👥 Contributing
 

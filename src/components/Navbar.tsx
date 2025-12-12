@@ -41,13 +41,13 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
             <div className="relative">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary via-secondary to-accent flex items-center justify-center">
-                <Zap className="w-6 h-6 text-primary-foreground" />
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 via-purple-500 to-violet-400 flex items-center justify-center shadow-lg">
+                <Zap className="w-6 h-6 text-white" />
               </div>
-              <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-primary via-secondary to-accent blur-lg opacity-50 group-hover:opacity-75 transition-opacity" />
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-blue-500 via-purple-500 to-violet-400 blur-lg opacity-40 group-hover:opacity-60 transition-opacity" />
             </div>
-            <span className="font-display text-2xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
-              DAKSH
+            <span className="font-display text-2xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-violet-400 bg-clip-text text-transparent">
+              EduARtisan
             </span>
           </Link>
 
@@ -67,7 +67,7 @@ const Navbar = () => {
                 {location.pathname === link.path && (
                   <motion.div
                     layoutId="navbar-indicator"
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-primary to-accent"
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
                     transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                   />
                 )}

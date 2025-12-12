@@ -1,5 +1,6 @@
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useInView } from 'react-intersection-observer';
 import { 
   Play, 
   Zap, 
@@ -10,7 +11,9 @@ import {
   ChevronRight,
   Glasses,
   Cpu,
-  Users
+  Users,
+  ArrowRight,
+  Sparkles
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
@@ -18,8 +21,23 @@ import ParticleBackground from '@/components/ParticleBackground';
 import FeatureCard from '@/components/FeatureCard';
 import StatsCounter from '@/components/StatsCounter';
 import Footer from '@/components/Footer';
+import ScrollProgress from '@/components/ScrollProgress';
+import { useRef } from 'react';
 
 const Index = () => {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+
+  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
+
+  const [statsRef, statsInView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [featuresRef, featuresInView] = useInView({ triggerOnce: true, threshold: 0.1 });
+
   const features: Array<{
     icon: typeof Glasses;
     title: string;
@@ -73,34 +91,40 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
+      <ScrollProgress />
       <ParticleBackground />
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center pt-20">
-        <div className="container mx-auto px-6 py-20 relative z-10">
+      {/* Hero Section with Parallax */}
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <motion.div 
+          style={{ opacity, scale, y }}
+          className="container mx-auto px-6 py-20 relative z-10"
+        >
           <div className="max-w-5xl mx-auto text-center">
             {/* Badge */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 glass-panel px-4 py-2 rounded-full mb-8"
+              className="inline-flex items-center gap-2 glass-panel px-5 py-2.5 rounded-full mb-8 border border-primary/20"
             >
-              <span className="w-2 h-2 rounded-full bg-neon-green animate-pulse" />
-              <span className="text-sm text-muted-foreground">The Future of Skill Training</span>
+              <Sparkles className="w-4 h-4 text-primary animate-pulse" />
+              <span className="text-sm font-medium bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                The Future of Skill Training
+              </span>
             </motion.div>
 
-            {/* Main Heading */}
+            {/* Main Heading with improved gradient */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="font-display text-5xl md:text-7xl lg:text-8xl font-bold mb-6"
+              className="font-display text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight"
             >
               <span className="text-foreground">Master Skills in</span>
               <br />
-              <span className="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent animate-gradient-shift bg-[length:200%_auto]">
+              <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-violet-400 bg-clip-text text-transparent">
                 Virtual Reality
               </span>
             </motion.h1>
@@ -110,10 +134,10 @@ const Index = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-3xl mx-auto leading-relaxed"
+              className="text-lg md:text-xl text-muted-foreground mb-10 max-w-3xl mx-auto leading-relaxed"
             >
               Immersive AR/VR training platform with AI-powered adaptive learning, 
-              voice navigation, and gamified skill development.
+              voice navigation, and gamified skill development for Industry 4.0.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -124,91 +148,131 @@ const Index = () => {
               className="flex flex-col sm:flex-row gap-4 justify-center items-center"
             >
               <Link to="/signup">
-                <Button size="xl" className="btn-glow group">
+                <Button size="lg" className="btn-glow group px-8 py-6 text-base">
                   <Play className="w-5 h-5 group-hover:scale-110 transition-transform" />
                   Start Learning Free
-                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
               <Link to="/modules">
-                <Button variant="outline" size="xl">
+                <Button variant="outline" size="lg" className="px-8 py-6 text-base border-primary/30 hover:border-primary/50 hover:bg-primary/5">
                   <Glasses className="w-5 h-5" />
                   Explore Modules
                 </Button>
               </Link>
             </motion.div>
 
-            {/* Floating 3D Element */}
+            {/* Hero Visual */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.8 }}
               className="mt-16 relative"
             >
-              <div className="relative w-full max-w-4xl mx-auto aspect-video rounded-2xl overflow-hidden glass-panel gradient-border">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center mx-auto mb-4 animate-float shadow-neon-cyan">
-                      <Glasses className="w-12 h-12 text-primary-foreground" />
-                    </div>
-                    <p className="text-lg text-muted-foreground">3D Preview Coming Soon</p>
-                  </div>
+              <div className="relative w-full max-w-4xl mx-auto aspect-video rounded-3xl overflow-hidden glass-panel border border-primary/20">
+                {/* Background gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/20 to-violet-600/20" />
+                
+                {/* Animated grid */}
+                <div className="absolute inset-0 opacity-20">
+                  <div className="absolute inset-0" style={{
+                    backgroundImage: `linear-gradient(rgba(96, 165, 250, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(96, 165, 250, 0.3) 1px, transparent 1px)`,
+                    backgroundSize: '50px 50px'
+                  }} />
                 </div>
-                <div className="absolute -inset-1 bg-gradient-to-r from-primary via-accent to-secondary opacity-20 blur-2xl -z-10" />
+
+                {/* Center content */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <motion.div 
+                    className="text-center"
+                    animate={{ y: [-10, 10, -10] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <div className="relative mb-6">
+                      <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-violet-400 flex items-center justify-center mx-auto shadow-2xl">
+                        <Glasses className="w-16 h-16 text-white" />
+                      </div>
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-violet-400 blur-2xl opacity-50" />
+                    </div>
+                    <p className="text-lg text-muted-foreground font-medium">AR/VR Experience Preview</p>
+                  </motion.div>
+                </div>
+
+                {/* Glow effect */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 via-purple-600 to-violet-600 opacity-20 blur-3xl -z-10" />
               </div>
             </motion.div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Scroll Indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10"
         >
-          <div className="w-6 h-10 rounded-full border-2 border-primary/50 flex items-start justify-center p-2">
+          <div className="w-6 h-10 rounded-full border-2 border-primary/40 flex items-start justify-center p-2">
             <motion.div
               animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
               className="w-1.5 h-1.5 rounded-full bg-primary"
             />
           </div>
         </motion.div>
+
+        {/* Decorative elements */}
+        <div className="absolute top-1/4 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 relative z-10">
+      <section ref={statsRef} className="py-20 relative z-10">
         <div className="container mx-auto px-6">
-          <div className="glass-panel rounded-2xl p-8 md:p-12">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 50 }}
+            animate={statsInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8 }}
+            className="glass-panel rounded-3xl p-8 md:p-12 border border-primary/10 relative overflow-hidden"
+          >
+            {/* Background decoration */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl" />
+            
+            <div className="relative grid grid-cols-2 md:grid-cols-4 gap-8">
               {stats.map((stat, index) => (
                 <StatsCounter key={index} {...stat} delay={index * 0.2} />
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 relative z-10">
+      <section ref={featuresRef} className="py-20 relative z-10">
         <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            animate={featuresInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <span className="inline-block px-4 py-1 glass-panel rounded-full text-sm text-primary mb-4">
-              Features
-            </span>
-            <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-              Why Choose <span className="text-glow-cyan text-primary">DAKSH</span>?
+            <motion.span 
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={featuresInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 glass-panel px-5 py-2 rounded-full text-sm font-medium mb-6 border border-primary/20"
+            >
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                Features
+              </span>
+            </motion.span>
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+              Why Choose <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">EduARtisan</span>?
             </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Experience the most advanced skill training platform with cutting-edge technology
+            <p className="text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+              Experience the most advanced offline-first skill training platform built for India's vocational education revolution
             </p>
           </motion.div>
 
@@ -228,37 +292,88 @@ const Index = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="glass-panel rounded-3xl p-12 md:p-16 text-center relative overflow-hidden"
+            className="glass-panel rounded-3xl p-12 md:p-20 text-center relative overflow-hidden border border-primary/20"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
-            <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/20 rounded-full blur-3xl" />
-            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-accent/20 rounded-full blur-3xl" />
+            {/* Animated background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/10 to-violet-600/10" />
+            <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
             
             <div className="relative z-10">
-              <div className="flex justify-center mb-6">
-                <div className="flex -space-x-3">
+              {/* User avatars */}
+              <motion.div 
+                initial={{ scale: 0.8, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="flex justify-center mb-8"
+              >
+                <div className="flex -space-x-4">
                   {[...Array(5)].map((_, i) => (
-                    <div
+                    <motion.div
                       key={i}
-                      className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary border-2 border-background flex items-center justify-center"
+                      initial={{ x: -20 * i, opacity: 0 }}
+                      whileInView={{ x: 0, opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.1, duration: 0.5 }}
+                      className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-violet-400 border-4 border-background flex items-center justify-center shadow-lg"
                     >
-                      <Users className="w-5 h-5 text-primary-foreground" />
-                    </div>
+                      <Users className="w-6 h-6 text-white" />
+                    </motion.div>
                   ))}
                 </div>
-              </div>
-              <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-                Ready to Transform Your Skills?
-              </h2>
-              <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
-                Join thousands of learners mastering new skills through immersive VR experiences.
-              </p>
-              <Link to="/signup">
-                <Button size="xl" className="btn-glow">
-                  <Zap className="w-5 h-5" />
-                  Get Started Now
-                </Button>
-              </Link>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+              >
+                <span className="inline-block px-4 py-1.5 glass-panel rounded-full text-sm font-medium mb-6 border border-primary/20">
+                  <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+                    Join 10,000+ Active Learners
+                  </span>
+                </span>
+              </motion.div>
+
+              <motion.h2 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4, duration: 0.6 }}
+                className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
+              >
+                Ready to Transform Your{' '}
+                <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-violet-400 bg-clip-text text-transparent">
+                  Skills?
+                </span>
+              </motion.h2>
+
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+                className="text-muted-foreground text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed"
+              >
+                Start your journey with India's first offline-capable AR/VR vocational training platform. No internet required.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.6, duration: 0.6 }}
+              >
+                <Link to="/signup">
+                  <Button size="lg" className="btn-glow group px-8 py-6 text-lg">
+                    <Zap className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                    Get Started Now
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+              </motion.div>
             </div>
           </motion.div>
         </div>
