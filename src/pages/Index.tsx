@@ -22,6 +22,7 @@ import FeatureCard from '@/components/FeatureCard';
 import StatsCounter from '@/components/StatsCounter';
 import Footer from '@/components/Footer';
 import ScrollProgress from '@/components/ScrollProgress';
+import PageTransition from '@/components/PageTransition';
 import { useRef } from 'react';
 
 const Index = () => {
@@ -90,10 +91,11 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
-      <ScrollProgress />
-      <ParticleBackground />
-      <Navbar />
+    <PageTransition>
+      <div className="min-h-screen bg-background overflow-x-hidden">
+        <ScrollProgress />
+        <ParticleBackground />
+        <Navbar />
 
       {/* Hero Section with Parallax */}
       <section ref={heroRef} className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
@@ -124,9 +126,28 @@ const Index = () => {
             >
               <span className="text-foreground">Master Skills in</span>
               <br />
-              <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-violet-400 bg-clip-text text-transparent">
+              <motion.span 
+                className="bg-gradient-to-r from-blue-500 via-purple-500 to-violet-400 bg-clip-text text-transparent relative inline-block cursor-pointer pb-2"
+                initial="rest"
+                whileHover="hover"
+                animate="rest"
+                variants={{
+                  rest: { scale: 1 },
+                  hover: { scale: 1.02 }
+                }}
+                transition={{ duration: 0.3 }}
+              >
                 Virtual Reality
-              </span>
+                <motion.span 
+                  className="absolute -bottom-1 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-violet-400 rounded-full"
+                  style={{ transformOrigin: "left", boxShadow: "0 0 20px rgba(139, 92, 246, 0.6)" }}
+                  variants={{
+                    rest: { scaleX: 0, opacity: 0 },
+                    hover: { scaleX: 1, opacity: 1 }
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                />
+              </motion.span>
             </motion.h1>
 
             {/* Subtitle */}
@@ -381,6 +402,7 @@ const Index = () => {
 
       <Footer />
     </div>
+    </PageTransition>
   );
 };
 

@@ -20,6 +20,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import ParticleBackground from '@/components/ParticleBackground';
+import ScrollProgress from '@/components/ScrollProgress';
+import PageTransition from '@/components/PageTransition';
 
 const Dashboard = () => {
   const [activeNav, setActiveNav] = useState('dashboard');
@@ -90,8 +92,10 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background flex">
-      <ParticleBackground />
+    <PageTransition>
+      <div className="min-h-screen bg-background flex">
+        <ScrollProgress />
+        <ParticleBackground />
 
       {/* Sidebar */}
       <motion.aside
@@ -300,6 +304,7 @@ const Dashboard = () => {
         </motion.div>
       </main>
     </div>
+    </PageTransition>
   );
 };
 

@@ -5,6 +5,8 @@ import { Eye, EyeOff, Mail, Lock, Zap, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import ParticleBackground from '@/components/ParticleBackground';
+import ScrollProgress from '@/components/ScrollProgress';
+import PageTransition from '@/components/PageTransition';
 import { useToast } from '@/hooks/use-toast';
 
 const Login = () => {
@@ -31,8 +33,10 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-6 relative">
-      <ParticleBackground />
+    <PageTransition>
+      <div className="min-h-screen bg-background flex items-center justify-center p-6 relative">
+        <ScrollProgress />
+        <ParticleBackground />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -165,6 +169,7 @@ const Login = () => {
         </div>
       </motion.div>
     </div>
+    </PageTransition>
   );
 };
 

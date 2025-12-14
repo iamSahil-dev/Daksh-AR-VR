@@ -28,6 +28,8 @@ import { saveProgress, getProgress } from '@/utils/progress';
 import { modulesData } from '@/data/modules';
 import WiringScene from '@/components/WiringScene';
 import AITutor from '@/components/AITutor';
+import ScrollProgress from '@/components/ScrollProgress';
+import PageTransition from '@/components/PageTransition';
 
 // WebXR Store
 const store = createXRStore();
@@ -161,7 +163,9 @@ const ModulePlayer = () => {
   const progress = ((currentStep + 1) / steps.length) * 100;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col lg:flex-row">
+    <PageTransition>
+      <div className="min-h-screen bg-background flex flex-col lg:flex-row">
+        <ScrollProgress />
       {/* 3D Viewer */}
       <div className="flex-1 relative">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-card to-background">
@@ -416,6 +420,7 @@ const ModulePlayer = () => {
           : "The module is complete. The user can restart the lesson."
       } />
     </div>
+    </PageTransition>
   );
 };
 
