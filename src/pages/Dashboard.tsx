@@ -32,25 +32,34 @@ const Dashboard = () => {
     { id: 'settings', icon: Settings, label: 'Settings' },
   ];
 
+  // Read progress from localStorage
+  const getModuleProgress = (id: string, total: number) => {
+    const completed = parseInt(localStorage.getItem(`module_progress_${id}`) || '0');
+    return {
+      completed,
+      percentage: Math.min(100, Math.round((completed / total) * 100))
+    };
+  };
+
   const modules = [
     {
       id: 1,
       title: 'Motor Assembly Basics',
-      progress: 75,
-      totalSteps: 10,
-      completedSteps: 7,
+      progress: getModuleProgress('1', 3).percentage, // 3 Total steps currently
+      totalSteps: 3,
+      completedSteps: getModuleProgress('1', 3).completed,
       difficulty: 'Beginner',
-      time: '45 min',
+      time: '15 min',
       image: '🔧',
     },
     {
       id: 2,
       title: 'Electrical Wiring',
-      progress: 40,
-      totalSteps: 8,
-      completedSteps: 3,
+      progress: getModuleProgress('2', 6).percentage, // Will have 6 steps (3 Intro + 3 Wiring)
+      totalSteps: 6,
+      completedSteps: getModuleProgress('2', 6).completed,
       difficulty: 'Intermediate',
-      time: '60 min',
+      time: '20 min',
       image: '⚡',
     },
     {
