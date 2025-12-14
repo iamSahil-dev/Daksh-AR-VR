@@ -314,7 +314,28 @@ const About = () => {
               The Challenge
             </span>
             <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-              India's <span className="text-red-500">Vocational Skills Crisis</span>
+              <motion.span 
+                className="relative inline-block cursor-pointer pb-2"
+                initial="rest"
+                whileHover="hover"
+                animate="rest"
+                variants={{
+                  rest: { scale: 1 },
+                  hover: { scale: 1.02 }
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                India's <span className="text-red-500">Vocational Skills Crisis</span>
+                <motion.span 
+                  className="absolute -bottom-1 left-0 w-full h-2 bg-gradient-to-r from-white to-red-500 rounded-full"
+                  style={{ transformOrigin: "left", boxShadow: "0 0 20px rgba(239, 68, 68, 0.6)" }}
+                  variants={{
+                    rest: { scaleX: 0, opacity: 0 },
+                    hover: { scaleX: 1, opacity: 1 }
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                />
+              </motion.span>
             </h2>
             <p className="text-muted-foreground text-lg max-w-3xl mx-auto leading-relaxed">
               Despite being the world's youngest nation, India faces a massive skill gap. 
@@ -389,7 +410,28 @@ const About = () => {
               Our Solution
             </span>
             <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-              The <span className="text-green-500">EduARtisan</span> Approach
+              <motion.span 
+                className="relative inline-block cursor-pointer pb-2"
+                initial="rest"
+                whileHover="hover"
+                animate="rest"
+                variants={{
+                  rest: { scale: 1 },
+                  hover: { scale: 1.02 }
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                The <span className="text-green-500">EduARtisan</span> Approach
+                <motion.span 
+                  className="absolute -bottom-1 left-0 w-full h-2 bg-gradient-to-r from-white to-green-500 rounded-full"
+                  style={{ transformOrigin: "left", boxShadow: "0 0 20px rgba(34, 197, 94, 0.6)" }}
+                  variants={{
+                    rest: { scaleX: 0, opacity: 0 },
+                    hover: { scaleX: 1, opacity: 1 }
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                />
+              </motion.span>
             </h2>
             <p className="text-muted-foreground text-lg max-w-3xl mx-auto leading-relaxed">
               We're democratizing vocational education by turning every smartphone into a virtual skill laboratory. 
@@ -448,7 +490,28 @@ const About = () => {
               />
               <div className="relative z-10">
                 <h3 className="font-display text-3xl font-bold mb-8 text-center">
-                  From Concept to <span className="text-primary">Career</span>
+                  <motion.span 
+                    className="relative inline-block cursor-pointer pb-2"
+                    initial="rest"
+                    whileHover="hover"
+                    animate="rest"
+                    variants={{
+                      rest: { scale: 1 },
+                      hover: { scale: 1.02 }
+                    }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    From Concept to <span className="text-primary">Career</span>
+                    <motion.span 
+                      className="absolute -bottom-1 left-0 w-full h-2 bg-gradient-to-r from-white to-blue-500 rounded-full"
+                      style={{ transformOrigin: "left", boxShadow: "0 0 20px rgba(59, 130, 246, 0.6)" }}
+                      variants={{
+                        rest: { scaleX: 0, opacity: 0 },
+                        hover: { scaleX: 1, opacity: 1 }
+                      }}
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                    />
+                  </motion.span>
                 </h3>
                 <div className="space-y-6">
                   <div className="flex gap-4 items-start">
@@ -521,7 +584,28 @@ const About = () => {
                   <Heart className="w-16 h-16 text-primary mx-auto mb-6" />
                 </motion.div>
                 <h2 className="font-display text-3xl md:text-4xl font-bold mb-6">
-                  Our <span className="text-primary">Vision</span>
+                  <motion.span 
+                    className="relative inline-block cursor-pointer pb-2"
+                    initial="rest"
+                    whileHover="hover"
+                    animate="rest"
+                    variants={{
+                      rest: { scale: 1 },
+                      hover: { scale: 1.02 }
+                    }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    Our <span className="text-primary">Vision</span>
+                    <motion.span 
+                      className="absolute -bottom-1 left-0 w-full h-2 bg-gradient-to-r from-white to-blue-500 rounded-full"
+                      style={{ transformOrigin: "left", boxShadow: "0 0 20px rgba(59, 130, 246, 0.6)" }}
+                      variants={{
+                        rest: { scaleX: 0, opacity: 0 },
+                        hover: { scaleX: 1, opacity: 1 }
+                      }}
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                    />
+                  </motion.span>
                 </h2>
                 <p className="text-muted-foreground text-lg leading-relaxed mb-6">
                   We envision an India where every young person, regardless of their location or economic background, 
@@ -551,7 +635,28 @@ const About = () => {
               Our Team
             </span>
             <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-              Meet the <span className="text-accent">Builders</span>
+              <motion.span 
+                className="relative inline-block cursor-pointer pb-2"
+                initial="rest"
+                whileHover="hover"
+                animate="rest"
+                variants={{
+                  rest: { scale: 1 },
+                  hover: { scale: 1.02 }
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                Meet the <span className="text-accent">Builders</span>
+                <motion.span 
+                  className="absolute -bottom-1 left-0 w-full h-2 bg-gradient-to-r from-white to-violet-400 rounded-full"
+                  style={{ transformOrigin: "left", boxShadow: "0 0 20px rgba(196, 181, 253, 0.6)" }}
+                  variants={{
+                    rest: { scaleX: 0, opacity: 0 },
+                    hover: { scaleX: 1, opacity: 1 }
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                />
+              </motion.span>
             </h2>
             <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
               A passionate team committed to transforming vocational education in India.
@@ -602,7 +707,28 @@ const About = () => {
               Technology Stack
             </span>
             <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-              Powered by <span className="text-secondary">Cutting-Edge Tech</span>
+              <motion.span 
+                className="relative inline-block cursor-pointer pb-2"
+                initial="rest"
+                whileHover="hover"
+                animate="rest"
+                variants={{
+                  rest: { scale: 1 },
+                  hover: { scale: 1.02 }
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                Powered by <span className="text-secondary">Cutting-Edge Tech</span>
+                <motion.span 
+                  className="absolute -bottom-1 left-0 w-full h-2 bg-gradient-to-r from-white to-purple-500 rounded-full"
+                  style={{ transformOrigin: "left", boxShadow: "0 0 20px rgba(168, 85, 247, 0.6)" }}
+                  variants={{
+                    rest: { scaleX: 0, opacity: 0 },
+                    hover: { scaleX: 1, opacity: 1 }
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                />
+              </motion.span>
             </h2>
             <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
               A perfect blend of AI, AR/VR, and mobile-first design to deliver seamless offline learning.
@@ -677,7 +803,28 @@ const About = () => {
               Our Journey
             </span>
             <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-              The <span className="text-primary">Story</span> So Far
+              <motion.span 
+                className="relative inline-block cursor-pointer pb-2"
+                initial="rest"
+                whileHover="hover"
+                animate="rest"
+                variants={{
+                  rest: { scale: 1 },
+                  hover: { scale: 1.02 }
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                The <span className="text-primary">Story</span> So Far
+                <motion.span 
+                  className="absolute -bottom-1 left-0 w-full h-2 bg-gradient-to-r from-white to-blue-500 rounded-full"
+                  style={{ transformOrigin: "left", boxShadow: "0 0 20px rgba(59, 130, 246, 0.6)" }}
+                  variants={{
+                    rest: { scaleX: 0, opacity: 0 },
+                    hover: { scaleX: 1, opacity: 1 }
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                />
+              </motion.span>
             </h2>
             <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
               From a simple idea to impacting thousands of lives across rural India.
@@ -763,10 +910,31 @@ const About = () => {
                 <Globe className="w-20 h-20 text-primary mx-auto mb-6" />
               </motion.div>
               <h2 className="font-display text-4xl md:text-5xl font-bold mb-6">
-                Ready to Transform Your{' '}
-                <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-violet-500 bg-clip-text text-transparent">
-                  Future?
-                </span>
+                <motion.span 
+                  className="relative inline-block cursor-pointer pb-2"
+                  initial="rest"
+                  whileHover="hover"
+                  animate="rest"
+                  variants={{
+                    rest: { scale: 1 },
+                    hover: { scale: 1.02 }
+                  }}
+                  transition={{ duration: 0.3 }}
+                >
+                  Ready to Transform Your{' '}
+                  <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-violet-500 bg-clip-text text-transparent">
+                    Future?
+                  </span>
+                  <motion.span 
+                    className="absolute -bottom-1 left-0 w-full h-2 bg-gradient-to-r from-white via-purple-500 to-violet-500 rounded-full"
+                    style={{ transformOrigin: "left", boxShadow: "0 0 20px rgba(139, 92, 246, 0.6)" }}
+                    variants={{
+                      rest: { scaleX: 0, opacity: 0 },
+                      hover: { scaleX: 1, opacity: 1 }
+                    }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                  />
+                </motion.span>
               </h2>
               <p className="text-muted-foreground text-lg md:text-xl mb-10 max-w-3xl mx-auto leading-relaxed">
                 Join thousands of learners who are building successful careers through 

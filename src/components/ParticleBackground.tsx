@@ -14,8 +14,10 @@ interface Particle {
 const ParticleBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
-  const mouseRef = useRef({ x: 0, y: 0 });
+  const mouseRef = useRef({ x: -1000, y: -1000, active: false });
+  const lastMouseMoveRef = useRef<number>(0);
   const animationRef = useRef<number>();
+  const patternOffsetRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -82,51 +84,101 @@ const ParticleBackground = () => {
     const drawConnections = () => {
       const particles = particlesRef.current;
       const maxDistance = 140;
+      const isMouseActive = mouseRef.current.active;
 
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
+      // Draw flowing pattern connections when mouse is not active
+      if (!isMouseActive) {
+        // Create wave-like patterns that move across the screen
+        const time = Date.now() * 0.001;
+        
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < maxDistance) {
-            const opacity = (1 - distance / maxDistance) * 0.25;
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            
-            // Gradient line for more visual appeal
-            const gradient = ctx.createLinearGradient(
-              particles[i].x, particles[i].y,
-              particles[j].x, particles[j].y
-            );
-            gradient.addColorStop(0, `rgba(96, 165, 250, ${opacity})`);
-            gradient.addColorStop(1, `rgba(139, 92, 246, ${opacity})`);
-            
-            ctx.strokeStyle = gradient;
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
+            if (distance < maxDistance) {
+              // Create flowing wave effect
+              const waveOffset = Math.sin(time + (particles[i].x + particles[i].y) * 0.01) * 0.3;
+              const opacity = (1 - distance / maxDistance) * (0.35 + waveOffset);
+              
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              
+              const gradient = ctx.createLinearGradient(
+                particles[i].x, particles[i].y,
+                particles[j].x, particles[j].y
+              );
+              gradient.addColorStop(0, `rgba(96, 165, 250, ${opacity})`);
+              gradient.addColorStop(0.5, `rgba(139, 92, 246, ${opacity})`);
+              gradient.addColorStop(1, `rgba(167, 139, 250, ${opacity})`);
+              
+              ctx.strokeStyle = gradient;
+              ctx.lineWidth = 2;
+              ctx.stroke();
+            }
+          }
+        }
+      } else {
+        // Regular connections when mouse is active
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < maxDistance) {
+              const opacity = (1 - distance / maxDistance) * 0.25;
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              
+              const gradient = ctx.createLinearGradient(
+                particles[i].x, particles[i].y,
+                particles[j].x, particles[j].y
+              );
+              gradient.addColorStop(0, `rgba(96, 165, 250, ${opacity})`);
+              gradient.addColorStop(1, `rgba(139, 92, 246, ${opacity})`);
+              
+              ctx.strokeStyle = gradient;
+              ctx.lineWidth = 1.5;
+              ctx.stroke();
+            }
           }
         }
       }
     };
 
     const updateParticle = (particle: Particle) => {
-      // Mouse interaction
-      const dx = mouseRef.current.x - particle.x;
-      const dy = mouseRef.current.y - particle.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      const maxDistance = 200;
+      const isMouseActive = mouseRef.current.active;
+      
+      if (isMouseActive) {
+        // Mouse interaction when active
+        const dx = mouseRef.current.x - particle.x;
+        const dy = mouseRef.current.y - particle.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const maxDistance = 200;
 
-      if (distance < maxDistance) {
-        const force = (1 - distance / maxDistance) * 0.025;
-        particle.vx -= dx * force;
-        particle.vy -= dy * force;
-        // Increase opacity when near mouse
-        particle.opacity = Math.min(particle.baseOpacity * 2, 0.8);
+        if (distance < maxDistance) {
+          const force = (1 - distance / maxDistance) * 0.025;
+          particle.vx -= dx * force;
+          particle.vy -= dy * force;
+          particle.opacity = Math.min(particle.baseOpacity * 2, 0.8);
+        } else {
+          particle.opacity = particle.baseOpacity + Math.sin(Date.now() * 0.0005 + particle.x * 0.005) * particle.baseOpacity * 0.5;
+        }
       } else {
-        // Gradually return to base opacity
-        particle.opacity = particle.baseOpacity + Math.sin(Date.now() * 0.0005 + particle.x * 0.005) * particle.baseOpacity * 0.5;
+        // When mouse is not active, create gentle flowing movement
+        const time = Date.now() * 0.0003;
+        const flowX = Math.sin(time + particle.y * 0.002) * 0.3;
+        const flowY = Math.cos(time + particle.x * 0.002) * 0.3;
+        
+        particle.vx += flowX * 0.01;
+        particle.vy += flowY * 0.01;
+        
+        // Pulsating opacity for patterns
+        particle.opacity = particle.baseOpacity + Math.sin(time * 2 + particle.x * 0.01) * particle.baseOpacity * 0.4;
       }
 
       // Apply velocity with damping
@@ -145,6 +197,10 @@ const ParticleBackground = () => {
     const animate = () => {
       ctx.fillStyle = 'rgba(17, 24, 39, 0.12)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Check if mouse is active (moved in last 1.5 seconds)
+      const now = Date.now();
+      mouseRef.current.active = (now - lastMouseMoveRef.current) < 1500;
 
       drawConnections();
 
@@ -157,7 +213,9 @@ const ParticleBackground = () => {
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY };
+      mouseRef.current.x = e.clientX;
+      mouseRef.current.y = e.clientY;
+      lastMouseMoveRef.current = Date.now();
     };
 
     resize();

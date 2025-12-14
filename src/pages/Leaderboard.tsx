@@ -190,7 +190,7 @@ const Leaderboard = () => {
       opacity: 1, 
       x: 0,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 100,
         damping: 12
       }
@@ -228,7 +228,28 @@ const Leaderboard = () => {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="font-display text-5xl md:text-6xl font-bold mb-4"
             >
-              Top <span className="text-primary">Performers</span>
+              <motion.span 
+                className="relative inline-block cursor-pointer pb-2"
+                initial="rest"
+                whileHover="hover"
+                animate="rest"
+                variants={{
+                  rest: { scale: 1 },
+                  hover: { scale: 1.02 }
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                Top <span className="text-primary">Performers</span>
+                <motion.span 
+                  className="absolute -bottom-1 left-0 w-full h-2 bg-gradient-to-r from-white to-blue-500 rounded-full"
+                  style={{ transformOrigin: "left", boxShadow: "0 0 20px rgba(59, 130, 246, 0.6)" }}
+                  variants={{
+                    rest: { scaleX: 0, opacity: 0 },
+                    hover: { scaleX: 1, opacity: 1 }
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                />
+              </motion.span>
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0 }}
