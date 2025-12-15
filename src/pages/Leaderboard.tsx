@@ -77,7 +77,7 @@ const Leaderboard = () => {
 
   const weeklyData = [
     { rank: 1, name: 'Sahil Kumar', points: 16200, modules: 33, streak: 60, avatar: '👨‍💻', badge: 'Master' },
-    { rank: 2, name: 'Jay Ratna', points: 15100, modules: 31, streak: 56, avatar: '👨‍🎓', badge: 'Expert' },
+    { rank: 2, name: 'Jai Ratna', points: 15100, modules: 31, streak: 56, avatar: '👨‍🎓', badge: 'Expert' },
     { rank: 3, name: 'Anvi Sharma', points: 14200, modules: 30, streak: 52, avatar: '👩‍🔬', badge: 'Expert' },
     { rank: 4, name: 'Anushka Singh', points: 12800, modules: 27, streak: 43, avatar: '👩‍💼', badge: 'Pro' },
     { rank: 5, name: 'Sandhya', points: 11900, modules: 25, streak: 39, avatar: '🧑‍🔧', badge: 'Pro' },
@@ -94,7 +94,7 @@ const Leaderboard = () => {
   ];
 
   const monthlyData = [
-    { rank: 1, name: 'Jay Ratna', points: 18500, modules: 35, streak: 65, avatar: '👨‍🎓', badge: 'Master' },
+    { rank: 1, name: 'Jai Ratna', points: 18500, modules: 35, streak: 65, avatar: '👨‍🎓', badge: 'Master' },
     { rank: 2, name: 'Anvi Sharma', points: 16800, modules: 33, streak: 58, avatar: '👩‍🔬', badge: 'Expert' },
     { rank: 3, name: 'Sahil Kumar', points: 15300, modules: 31, streak: 52, avatar: '👨‍💻', badge: 'Expert' },
     { rank: 4, name: 'Divyansh Vijay', points: 14100, modules: 29, streak: 47, avatar: '👩‍💼', badge: 'Pro' },

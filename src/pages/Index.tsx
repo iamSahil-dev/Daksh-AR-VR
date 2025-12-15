@@ -290,7 +290,28 @@ const Index = () => {
               </span>
             </motion.span>
             <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              Why Choose <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">EduARtisan</span>?
+              <motion.span 
+                className="relative inline-block cursor-pointer pb-2"
+                initial="rest"
+                whileHover="hover"
+                animate="rest"
+                variants={{
+                  rest: { scale: 1 },
+                  hover: { scale: 1.02 }
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                Why Choose <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">EduARtisan</span>?
+                <motion.span 
+                  className="absolute -bottom-1 left-0 w-full h-2 bg-gradient-to-r from-white via-blue-500 to-purple-500 rounded-full"
+                  style={{ transformOrigin: "left", boxShadow: "0 0 20px rgba(139, 92, 246, 0.6)" }}
+                  variants={{
+                    rest: { scaleX: 0, opacity: 0 },
+                    hover: { scaleX: 1, opacity: 1 }
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                />
+              </motion.span>
             </h2>
             <p className="text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
               Experience the most advanced offline-first skill training platform built for India's vocational education revolution
@@ -365,10 +386,31 @@ const Index = () => {
                 transition={{ delay: 0.4, duration: 0.6 }}
                 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
               >
-                Ready to Transform Your{' '}
-                <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-violet-400 bg-clip-text text-transparent">
-                  Skills?
-                </span>
+                <motion.span 
+                  className="relative inline-block cursor-pointer pb-2"
+                  initial="rest"
+                  whileHover="hover"
+                  animate="rest"
+                  variants={{
+                    rest: { scale: 1 },
+                    hover: { scale: 1.02 }
+                  }}
+                  transition={{ duration: 0.3 }}
+                >
+                  Ready to Transform Your{' '}
+                  <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-violet-400 bg-clip-text text-transparent">
+                    Skills?
+                  </span>
+                  <motion.span 
+                    className="absolute -bottom-1 left-0 w-full h-2 bg-gradient-to-r from-white via-purple-500 to-violet-400 rounded-full"
+                    style={{ transformOrigin: "left", boxShadow: "0 0 20px rgba(139, 92, 246, 0.6)" }}
+                    variants={{
+                      rest: { scaleX: 0, opacity: 0 },
+                      hover: { scaleX: 1, opacity: 1 }
+                    }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                  />
+                </motion.span>
               </motion.h2>
 
               <motion.p 

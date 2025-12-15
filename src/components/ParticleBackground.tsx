@@ -17,7 +17,8 @@ const ParticleBackground = () => {
   const mouseRef = useRef({ x: -1000, y: -1000, active: false });
   const lastMouseMoveRef = useRef<number>(0);
   const animationRef = useRef<number>();
-  const patternOffsetRef = useRef({ x: 0, y: 0 });
+  const clickBurstRef = useRef<{ x: number; y: number; time: number } | null>(null);
+  const prefersReducedMotion = useRef(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -25,6 +26,10 @@ const ParticleBackground = () => {
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    
+    // Check for reduced motion preference
+    const motionMediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    prefersReducedMotion.current = motionMediaQuery.matches;
 
     // Professional color palette - vibrant blues and purples
     const colors = [
@@ -42,11 +47,14 @@ const ParticleBackground = () => {
     };
 
     const createParticles = () => {
-      const count = Math.floor((window.innerWidth * window.innerHeight) / 15000);
+      // Reduce particle count for mobile and respect reduced motion
+      const isMobile = window.innerWidth < 768;
+      const baseCount = Math.floor((window.innerWidth * window.innerHeight) / (isMobile ? 20000 : 15000));
+      const count = prefersReducedMotion.current ? Math.floor(baseCount * 0.3) : baseCount;
       particlesRef.current = [];
 
       for (let i = 0; i < count; i++) {
-        const baseOpacity = Math.random() * 0.4 + 0.2;
+        const baseOpacity = Math.random() * 0.4 + 0.3;
         particlesRef.current.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
@@ -61,22 +69,22 @@ const ParticleBackground = () => {
     };
 
     const drawParticle = (particle: Particle) => {
-      // Main particle
+      // Main particle with enhanced brightness
       ctx.beginPath();
       ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
       ctx.fillStyle = particle.color + particle.opacity + ')';
       ctx.fill();
 
-      // Subtle glow effect
+      // Enhanced glow effect
       const gradient = ctx.createRadialGradient(
         particle.x, particle.y, 0,
-        particle.x, particle.y, particle.size * 4
+        particle.x, particle.y, particle.size * 6
       );
-      gradient.addColorStop(0, particle.color + (particle.opacity * 0.6) + ')');
-      gradient.addColorStop(0.5, particle.color + (particle.opacity * 0.2) + ')');
+      gradient.addColorStop(0, particle.color + (particle.opacity * 0.8) + ')');
+      gradient.addColorStop(0.4, particle.color + (particle.opacity * 0.4) + ')');
       gradient.addColorStop(1, particle.color + '0)');
       ctx.beginPath();
-      ctx.arc(particle.x, particle.y, particle.size * 4, 0, Math.PI * 2);
+      ctx.arc(particle.x, particle.y, particle.size * 6, 0, Math.PI * 2);
       ctx.fillStyle = gradient;
       ctx.fill();
     };
@@ -98,9 +106,9 @@ const ParticleBackground = () => {
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < maxDistance) {
-              // Create flowing wave effect
-              const waveOffset = Math.sin(time + (particles[i].x + particles[i].y) * 0.01) * 0.3;
-              const opacity = (1 - distance / maxDistance) * (0.35 + waveOffset);
+              // Create flowing wave effect with enhanced opacity
+              const waveOffset = Math.sin(time + (particles[i].x + particles[i].y) * 0.01) * 0.35;
+              const opacity = (1 - distance / maxDistance) * (0.5 + waveOffset);
               
               ctx.beginPath();
               ctx.moveTo(particles[i].x, particles[i].y);
@@ -129,7 +137,7 @@ const ParticleBackground = () => {
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < maxDistance) {
-              const opacity = (1 - distance / maxDistance) * 0.25;
+              const opacity = (1 - distance / maxDistance) * 0.35;
               ctx.beginPath();
               ctx.moveTo(particles[i].x, particles[i].y);
               ctx.lineTo(particles[j].x, particles[j].y);
@@ -142,7 +150,7 @@ const ParticleBackground = () => {
               gradient.addColorStop(1, `rgba(139, 92, 246, ${opacity})`);
               
               ctx.strokeStyle = gradient;
-              ctx.lineWidth = 1.5;
+              ctx.lineWidth = 1.8;
               ctx.stroke();
             }
           }
@@ -154,19 +162,47 @@ const ParticleBackground = () => {
       const isMouseActive = mouseRef.current.active;
       
       if (isMouseActive) {
-        // Mouse interaction when active
+        // Magnetic cursor - attract at medium distance, repel when close
         const dx = mouseRef.current.x - particle.x;
         const dy = mouseRef.current.y - particle.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
-        const maxDistance = 200;
+        const attractDistance = 250;
+        const repelDistance = 100;
 
-        if (distance < maxDistance) {
-          const force = (1 - distance / maxDistance) * 0.025;
+        if (distance < repelDistance) {
+          // Repel when very close
+          const force = (1 - distance / repelDistance) * 0.04;
           particle.vx -= dx * force;
           particle.vy -= dy * force;
-          particle.opacity = Math.min(particle.baseOpacity * 2, 0.8);
+          particle.opacity = Math.min(particle.baseOpacity * 2.5, 0.9);
+        } else if (distance < attractDistance) {
+          // Attract at medium distance
+          const force = ((attractDistance - distance) / attractDistance) * 0.008;
+          particle.vx += dx * force;
+          particle.vy += dy * force;
+          particle.opacity = particle.baseOpacity * 1.5;
         } else {
           particle.opacity = particle.baseOpacity + Math.sin(Date.now() * 0.0005 + particle.x * 0.005) * particle.baseOpacity * 0.5;
+        }
+        
+        // Click burst effect
+        if (clickBurstRef.current) {
+          const timeSinceClick = Date.now() - clickBurstRef.current.time;
+          if (timeSinceClick < 500) {
+            const cdx = clickBurstRef.current.x - particle.x;
+            const cdy = clickBurstRef.current.y - particle.y;
+            const cdistance = Math.sqrt(cdx * cdx + cdy * cdy);
+            const burstRadius = 300;
+            
+            if (cdistance < burstRadius) {
+              const burstForce = (1 - timeSinceClick / 500) * (1 - cdistance / burstRadius) * 0.15;
+              particle.vx -= cdx * burstForce;
+              particle.vy -= cdy * burstForce;
+              particle.opacity = Math.min(particle.baseOpacity * 3, 1);
+            }
+          } else {
+            clickBurstRef.current = null;
+          }
         }
       } else {
         // When mouse is not active, create gentle flowing movement
@@ -195,7 +231,7 @@ const ParticleBackground = () => {
     };
 
     const animate = () => {
-      ctx.fillStyle = 'rgba(17, 24, 39, 0.12)';
+      ctx.fillStyle = 'rgba(17, 24, 39, 1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       // Check if mouse is active (moved in last 1.5 seconds)
@@ -217,20 +253,58 @@ const ParticleBackground = () => {
       mouseRef.current.y = e.clientY;
       lastMouseMoveRef.current = Date.now();
     };
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        mouseRef.current.x = e.touches[0].clientX;
+        mouseRef.current.y = e.touches[0].clientY;
+        lastMouseMoveRef.current = Date.now();
+      }
+    };
+    
+    const handleClick = (e: MouseEvent) => {
+      if (prefersReducedMotion.current) return;
+      clickBurstRef.current = {
+        x: e.clientX,
+        y: e.clientY,
+        time: Date.now()
+      };
+    };
+    
+    const handleTouchStart = (e: TouchEvent) => {
+      if (prefersReducedMotion.current || e.touches.length === 0) return;
+      clickBurstRef.current = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+        time: Date.now()
+      };
+    };
 
     resize();
     createParticles();
     animate();
+
+    const handleMotionChange = () => {
+      prefersReducedMotion.current = motionMediaQuery.matches;
+    };
 
     window.addEventListener('resize', () => {
       resize();
       createParticles();
     });
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('click', handleClick);
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    motionMediaQuery.addEventListener('change', handleMotionChange);
 
     return () => {
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('click', handleClick);
+      window.removeEventListener('touchstart', handleTouchStart);
+      motionMediaQuery.removeEventListener('change', handleMotionChange);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
@@ -240,8 +314,8 @@ const ParticleBackground = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0"
-      style={{ background: 'transparent' }}
+      className="fixed inset-0 z-0"
+      style={{ background: 'transparent', pointerEvents: 'auto', cursor: 'default' }}
     />
   );
 };
