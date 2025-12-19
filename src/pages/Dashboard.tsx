@@ -47,9 +47,9 @@ const Dashboard = () => {
     {
       id: 1,
       title: 'Motor Assembly Basics',
-      progress: getModuleProgress('1', 3).percentage, // 3 Total steps currently
-      totalSteps: 3,
-      completedSteps: getModuleProgress('1', 3).completed,
+      progress: getModuleProgress('1', 6).percentage, // 3 Intro + 3 Assembly
+      totalSteps: 6,
+      completedSteps: getModuleProgress('1', 6).completed,
       difficulty: 'Beginner',
       time: '15 min',
       image: '🔧',
@@ -57,7 +57,7 @@ const Dashboard = () => {
     {
       id: 2,
       title: 'Electrical Wiring',
-      progress: getModuleProgress('2', 6).percentage, // Will have 6 steps (3 Intro + 3 Wiring)
+      progress: getModuleProgress('2', 6).percentage, // No change
       totalSteps: 6,
       completedSteps: getModuleProgress('2', 6).completed,
       difficulty: 'Intermediate',
@@ -67,11 +67,11 @@ const Dashboard = () => {
     {
       id: 3,
       title: 'PCB Soldering',
-      progress: 0,
-      totalSteps: 12,
-      completedSteps: 0,
+      progress: getModuleProgress('3', 8).percentage, // 4 Intro + Safety + 3 Assembly
+      totalSteps: 8,
+      completedSteps: getModuleProgress('3', 8).completed,
       difficulty: 'Advanced',
-      time: '90 min',
+      time: '15 min',
       image: '🔬',
     },
   ];

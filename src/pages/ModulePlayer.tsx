@@ -27,62 +27,14 @@ import { useToast } from '@/hooks/use-toast';
 import { saveProgress, getProgress } from '@/utils/progress';
 import { modulesData } from '@/data/modules';
 import WiringScene from '@/components/WiringScene';
+import MotorScene from '@/components/MotorScene';
+import PCBScene from '@/components/PCBScene';
 import AITutor from '@/components/AITutor';
 import ScrollProgress from '@/components/ScrollProgress';
 import PageTransition from '@/components/PageTransition';
 
 // WebXR Store
 const store = createXRStore();
-
-// 3D Motor Component (Reused/Simplified)
-const MotorPart = ({ position, color, isActive, onClick }: {
-  position: [number, number, number];
-  color: string;
-  isActive: boolean;
-  onClick: () => void;
-}) => {
-  return (
-    <Float speed={isActive ? 2 : 0.5} floatIntensity={isActive ? 0.5 : 0.1}>
-      <mesh position={position} onClick={onClick} castShadow>
-        <cylinderGeometry args={[0.5, 0.5, 1, 32]} />
-        <meshStandardMaterial 
-          color={color} 
-          emissive={isActive ? color : '#000000'}
-          emissiveIntensity={isActive ? 0.5 : 0}
-          metalness={0.8}
-          roughness={0.2}
-        />
-      </mesh>
-    </Float>
-  );
-};
-
-const MotorScene = ({ currentStep, onPartClick }: { currentStep: number; onPartClick: (part: string) => void }) => {
-  const parts = [
-    { id: 'stator', position: [0, 0, 0] as [number, number, number], color: '#00f0ff' },
-    { id: 'rotor', position: [0, 1.2, 0] as [number, number, number], color: '#a855f7' },
-    { id: 'shaft', position: [0, 2.4, 0] as [number, number, number], color: '#ec4899' },
-  ];
-
-  return (
-    <group>
-      <ambientLight intensity={0.3} />
-      <pointLight position={[10, 10, 10]} intensity={1} />
-      <pointLight position={[-10, -10, -10]} intensity={0.5} color="#00f0ff" />
-      
-      {parts.map((part, index) => (
-        <MotorPart
-          key={part.id}
-          position={part.position}
-          color={part.color}
-          isActive={index === currentStep} // Simplified logic for demo
-          onClick={() => onPartClick(part.id)}
-        />
-      ))}
-      <Environment preset="city" />
-    </group>
-  );
-};
 
 const ModulePlayer = () => {
   const { id } = useParams();
@@ -172,14 +124,24 @@ const ModulePlayer = () => {
           <Canvas>
              <XR store={store}>
                 <Suspense fallback={null}>
-                  {moduleData.type === 'wiring' ? (
+                  {moduleData.type === 'wiring' && (
                     <WiringScene 
                       currentStep={currentStep} 
                       onPartClick={handlePartClick} 
                       step={steps[currentStep] || { id: 'complete', requiredConnection: null, title: { en: 'Complete', hi: 'पूर्ण' }, description: { en: '', hi: '' }, instruction: { en: '', hi: '' } }}
                     />
-                  ) : (
-                    <MotorScene currentStep={currentStep} onPartClick={handlePartClick} />
+                  )}
+                  {moduleData.type === 'motor' && (
+                    <MotorScene 
+                        currentStep={currentStep} 
+                        onPartClick={handlePartClick} 
+                    />
+                  )}
+                  {moduleData.type === 'pcb' && (
+                    <PCBScene 
+                        currentStep={currentStep} 
+                        onPartClick={handlePartClick} 
+                    />
                   )}
                   <OrbitControls />
                 </Suspense>
